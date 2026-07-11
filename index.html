@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Tools — Launchpad</title>
+<style>
+:root {
+  --bg: #060b18; --surface: #0c1225; --elevated: #111830;
+  --border: #1a2540; --text: #e8ecf4; --muted: #556888; --accent: #0066ff;
+  --accent-dim: #0052cc; --accent-glow: rgba(0,102,255,0.25);
+  --low: #22cc66; --critical: #ff4444; --medium: #e6b800;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", Consolas, monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--font);padding:24px}
+.container{max-width:960px;margin:0 auto}
+h1{font-size:32px;font-weight:700;margin-bottom:4px;letter-spacing:-0.5px}
+@media(max-width:480px){h1{font-size:24px}}
+h1 span{color:var(--accent)}
+.subtitle{color:var(--muted);font-size:14px;margin-bottom:32px}
+@media(max-width:480px){.subtitle{font-size:12px;margin-bottom:20px}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.card{background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:var(--text)}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 20px var(--accent-glow)}
+.icon{font-size:36px;margin-bottom:12px}
+.card h2{font-size:18px;font-weight:600;margin-bottom:6px}
+@media(max-width:480px){.card h2{font-size:16px}}
+.card p{font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:12px}
+@media(max-width:480px){.card p{font-size:11px}}
+.badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.badge-green{background:#123020;color:#22cc66}
+.badge-blue{background:#102830;color:#00aacc}
+.badge-orange{background:#352215;color:#ff7722}
+.badge-accent{background:var(--accent-glow);color:var(--accent)}
+.badge-critical{background:#351520;color:#ff4444}
+.report{background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+.report h3{font-size:16px;font-weight:600;margin-bottom:16px}
+.report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{text-align:center}
+.stat .val{font-size:28px;font-weight:700}
+.stat .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+.stat .src{font-size:9px;color:var(--muted);opacity:0.6}
+
+/* Pipeline visual */
+.pipeline{display:flex;align-items:center;gap:12px;padding:20px 0;flex-wrap:wrap;justify-content:center}
+.pipe-step{background:var(--elevated);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;min-width:160px;flex:1;transition:all .2s;text-decoration:none;color:var(--text)}
+.pipe-step:hover{border-color:var(--accent)}
+.pipe-step .step-icon{font-size:28px;margin-bottom:6px}
+.pipe-step .step-name{font-size:13px;font-weight:600;margin-bottom:2px}
+.pipe-step .step-count{font-size:11px;color:var(--muted)}
+.pipe-step.active{border-color:var(--accent);box-shadow:0 0 12px var(--accent-glow)}
+.pipe-step.done{border-color:var(--low);box-shadow:0 0 12px rgba(34,204,102,0.2)}
+.pipe-arrow{font-size:20px;color:var(--muted);flex-shrink:0}
+.pipe-label{font-size:11px;color:var(--muted);margin-top:12px;text-align:center}
+
+.footer{text-align:center;margin-top:24px;font-size:11px;color:var(--muted)}
+.footer a{color:var(--accent);text-decoration:none}
+@media(max-width:640px){
+  .grid{grid-template-columns:1fr}
+  .report-grid{grid-template-columns:repeat(2,1fr)}
+  .pipeline{flex-direction:column}
+  .pipe-arrow{transform:rotate(90deg)}
+}
+@media(max-width:480px){
+  .report-grid{grid-template-columns:1fr}
+  .stat .val{font-size:22px}
+  .body{padding:16px}
+  .card{padding:16px}
+  .report{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>⚡ <span>Security</span> Tools</h1>
+  <div class="subtitle">Vulnerability management · Remediation intelligence · Endpoint health · AI infrastructure chat</div>
+
+  <!-- Pipeline View -->
+  <div class="report" id="pipeline-report">
+    <h3>🔄 Remediation Pipeline</h3>
+    <div class="pipeline" id="pipeline">
+      <a class="pipe-step" href="https://mrdchiang.github.io/amp-shield/" target="_blank" id="pipe-shieldview">
+        <div class="step-icon">🛡️</div>
+        <div class="step-name">ShieldView</div>
+        <div class="step-count">Finds vulnerabilities</div>
+      </a>
+      <div class="pipe-arrow">→</div>
+      <a class="pipe-step" href="https://mrdchiang.github.io/remflow/" target="_blank" id="pipe-patchflow">
+        <div class="step-icon">🛠️</div>
+        <div class="step-name">RemFlow</div>
+        <div class="step-count" id="pipe-patchflow-count">Deploys fixes</div>
+      </a>
+      <div class="pipe-arrow">→</div>
+      <a class="pipe-step" href="https://mrdchiang.github.io/thevalidator/" target="_blank" id="pipe-validator">
+        <div class="step-icon">⚡</div>
+        <div class="step-name">TheValidator</div>
+        <div class="step-count" id="pipe-validator-count">Verifies endpoints</div>
+      </a>
+    </div>
+    <div class="pipe-label">Click any step to open that tool — data flows between them via shared localStorage</div>
+  </div>
+
+  <!-- Tool Cards -->
+  <div class="grid">
+    <a class="card" href="https://mrdchiang.github.io/amp-shield/" target="_blank">
+      <div class="icon">🛡️</div>
+      <h2>ShieldView</h2>
+      <p style="margin-bottom:4px">Vulnerability management with KEV tracking, executive scores, and team views</p>
+      <p style="font-size:11px;color:var(--text-secondary,#8899bb);line-height:1.4;margin-bottom:12px"><strong>What it does:</strong> Ingests Tenable scan data, cross-references CISA Known Exploited Vulnerabilities, and surfaces findings by team and severity. Tracks remediation status and computes an executive compliance score with letter grading.</p>
+      <span class="badge badge-blue">Vulnerability Mgmt</span>
+    </a>
+    <a class="card" href="https://mrdchiang.github.io/remflow/" target="_blank">
+      <div class="icon">🛠️</div>
+      <h2>RemFlow</h2>
+      <p style="margin-bottom:4px">Remediation pipeline — groups assets, deploys fixes, tracks coverage</p>
+      <p style="font-size:11px;color:var(--text-secondary,#8899bb);line-height:1.4;margin-bottom:12px"><strong>What it does:</strong> Groups affected assets by CVE to assess blast radius, deploys patches via SCCM/PDQ-style workflows, and tracks deployment progress. Receives findings from ShieldView, applies fixes, then hands off to TheValidator for verification.</p>
+      <span class="badge badge-orange">Remediation</span>
+    </a>
+    <a class="card" href="https://mrdchiang.github.io/thevalidator/" target="_blank">
+      <div class="icon">⚡</div>
+      <h2>TheValidator</h2>
+      <p style="margin-bottom:4px">Endpoint health checks, GPO drift detection, fix verification</p>
+      <p style="font-size:11px;color:var(--text-secondary,#8899bb);line-height:1.4;margin-bottom:12px"><strong>What it does:</strong> Performs simulated agent health checks across security tools (endpoint protection, ZTNA, encryption, patching). Detects GPO configuration drift by comparing actual endpoint settings against policy baselines. Verifies that RemFlow-deployed remediations actually resolved the issues.</p>
+      <span class="badge badge-green">Health + Compliance</span>
+    </a>
+    <a class="card" href="https://mrdchiang.github.io/askclippy/" target="_blank">
+      <div class="icon">📎</div>
+      <h2>AskClippy</h2>
+      <p style="margin-bottom:4px">AI chat for your infrastructure — ask about assets, CVEs, health</p>
+      <p style="font-size:11px;color:var(--text-secondary,#8899bb);line-height:1.4;margin-bottom:12px"><strong>What it does:</strong> Drop a Tenable scan CSV/JSON or point it at your knowledge snapshot, then ask questions in plain English. "Which assets have critical KEV CVEs?", "What's our GPO compliance rate?", or "Executive summary of our security posture." Offline-capable with an animated Clippy assistant.</p>
+      <span class="badge badge-blue">AI Chat</span>
+    </a>
+  </div>
+
+  <!-- Unified Posture -->
+  <div class="report" id="report">
+    <h3>📊 Unified Security Posture</h3>
+    <div class="report-grid">
+      <div class="stat"><div class="val" style="color:var(--accent)" id="s-findings">—</div><div class="lbl">Active Findings</div><div class="src">ShieldView</div></div>
+      <div class="stat"><div class="val" style="color:#22cc66" id="s-remediated">—</div><div class="lbl">Remediation Rate</div><div class="src">RemFlow</div></div>
+      <div class="stat"><div class="val" style="color:#00aacc" id="s-compliant">—</div><div class="lbl">GPO Compliance</div><div class="src">TheValidator</div></div>
+      <div class="stat"><div class="val" style="color:#ff7722" id="s-healthy">—</div><div class="lbl">Endpoint Health</div><div class="src">TheValidator</div></div>
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:var(--muted);text-align:center">Simulated aggregated view — computed from generated demo data</div>
+  </div>
+
+  <div class="footer">
+    Built by David Chiang · <a href="mailto:mrdavidchiang@gmail.com">mrdavidchiang@gmail.com</a> ·
+    <a href="#" onclick="clearPipeline();return false" style="color:var(--muted)">Reset pipeline data</a> ·
+    <span style="color:var(--muted)">2026 Edition</span>
+  </div>
+</div>
+
+<script>
+// Cross-tool bridge: read shared state from localStorage
+function getQueue() {
+  try { return JSON.parse(localStorage.getItem('security-tools:remediation-queue') || '[]'); } catch(e) { return []; }
+}
+function getValidated() {
+  try { return JSON.parse(localStorage.getItem('security-tools:validated-remediations') || '[]'); } catch(e) { return []; }
+}
+
+function updatePipeline() {
+  const queue = getQueue();
+  const validated = getValidated();
+  const pending = queue.filter(i => i.status === 'pending');
+  const deployed = queue.filter(i => i.status === 'deployed');
+
+  // Update pipeline step states
+  const svStep = document.getElementById('pipe-shieldview');
+  const pfStep = document.getElementById('pipe-patchflow');
+  const tvStep = document.getElementById('pipe-validator');
+
+  svStep.classList.toggle('active', pending.length > 0 || deployed.length > 0);
+
+  if (pending.length > 0) {
+    pfStep.classList.add('active');
+    pfStep.classList.remove('done');
+    document.getElementById('pipe-patchflow-count').textContent = `${pending.length} pending`;
+  } else if (deployed.length > 0) {
+    pfStep.classList.add('done');
+    pfStep.classList.remove('active');
+    document.getElementById('pipe-patchflow-count').textContent = `${deployed.length} deployed`;
+  } else {
+    pfStep.classList.remove('active', 'done');
+    document.getElementById('pipe-patchflow-count').textContent = 'Deploys fixes';
+  }
+
+  if (validated.length > 0) {
+    tvStep.classList.add('done');
+    tvStep.classList.remove('active');
+    document.getElementById('pipe-validator-count').textContent = `${validated.length} verified`;
+  } else if (deployed.length > 0) {
+    tvStep.classList.add('active');
+    tvStep.classList.remove('done');
+    document.getElementById('pipe-validator-count').textContent = 'Awaiting verification';
+  } else {
+    tvStep.classList.remove('active', 'done');
+    document.getElementById('pipe-validator-count').textContent = 'Verifies endpoints';
+  }
+}
+
+function clearPipeline() {
+  localStorage.removeItem('security-tools:remediation-queue');
+  localStorage.removeItem('security-tools:validated-remediations');
+  localStorage.removeItem('security-tools:last-remediation');
+  updatePipeline();
+  updateStats();
+}
+
+function updateStats() {
+  // Simulated unified stats
+  function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+  document.getElementById('s-findings').textContent = rand(120,180);
+  document.getElementById('s-remediated').textContent = rand(60,78) + '%';
+  document.getElementById('s-compliant').textContent = rand(65,85) + '%';
+  document.getElementById('s-healthy').textContent = rand(70,88) + '%';
+}
+
+// Listen for localStorage changes from other tabs/windows
+window.addEventListener('storage', function(e) {
+  if (e.key && e.key.startsWith('security-tools:')) {
+    updatePipeline();
+  }
+});
+
+// Init
+updatePipeline();
+updateStats();
+
+// Poll every 3 seconds for cross-tab changes (same-tab updates from ShieldView/RemFlow)
+setInterval(function() {
+  updatePipeline();
+}, 3000);
+</script>
+</body>
+</html>
