@@ -9,34 +9,91 @@
   --bg: #060b18; --surface: #0c1225; --elevated: #111830;
   --border: #1a2540; --text: #e8ecf4; --muted: #556888; --accent: #0066ff;
   --accent-dim: #0052cc; --accent-glow: rgba(0,102,255,0.25);
+  --accent2: #7c3aed; --accent2-glow: rgba(124,58,237,0.2);
   --low: #22cc66; --critical: #ff4444; --medium: #e6b800;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: "SF Mono", "Fira Code", Consolas, monospace;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{background:var(--bg);color:var(--text);font-family:var(--font);padding:24px}
-.container{max-width:960px;margin:0 auto}
-h1{font-size:32px;font-weight:700;margin-bottom:4px;letter-spacing:-0.5px}
+body{
+  background:
+    linear-gradient(135deg, rgba(6,11,24,1) 0%, rgba(10,20,45,1) 50%, rgba(6,11,24,1) 100%),
+    var(--bg);
+  color:var(--text);font-family:var(--font);padding:24px;
+  position:relative;
+}
+/* Subtle background grid pattern */
+body::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.015) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+.container{max-width:960px;margin:0 auto;position:relative;z-index:1}
+/* Header with gradient accent */
+.header-area{text-align:left;margin-bottom:32px;position:relative}
+.header-area::after{
+  content:'';position:absolute;top:-20px;left:-20px;right:-20px;bottom:-10px;
+  background:radial-gradient(ellipse at 20% 50%, var(--accent2-glow) 0%, transparent 60%);
+  pointer-events:none;z-index:-1;opacity:0.7;
+}
+h1{font-size:32px;font-weight:700;margin-bottom:4px;letter-spacing:-0.5px;
+  background:linear-gradient(135deg,var(--text) 0%,var(--accent) 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:inline-block;}
 @media(max-width:480px){h1{font-size:24px}}
 h1 span{color:var(--accent)}
-.subtitle{color:var(--muted);font-size:14px;margin-bottom:32px}
+.title-tag{display:inline-block;vertical-align:middle;margin-left:10px;margin-bottom:8px;
+  padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;letter-spacing:0.3px;box-shadow:0 0 12px var(--accent-glow);}
+.subtitle{color:var(--muted);font-size:14px}
 @media(max-width:480px){.subtitle{font-size:12px;margin-bottom:20px}}
+
+/* Card fade-in animation */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
-.card{background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;text-decoration:none;display:block;color:var(--text)}
-.card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 20px var(--accent-glow)}
+.card{
+  background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:24px;
+  text-align:center;cursor:pointer;transition:all .3s ease;text-decoration:none;display:block;color:var(--text);
+  opacity:0;animation:fadeUp 0.5s ease forwards;
+}
+.card:nth-child(1){animation-delay:0.1s}
+.card:nth-child(2){animation-delay:0.2s}
+.card:nth-child(3){animation-delay:0.3s}
+.card:nth-child(4){animation-delay:0.4s}
+.card:hover{
+  border-color:var(--accent);transform:translateY(-3px);
+  box-shadow:0 6px 28px var(--accent-glow), 0 0 0 1px rgba(0,102,255,0.1);
+}
 .icon{font-size:36px;margin-bottom:12px}
 .card h2{font-size:18px;font-weight:600;margin-bottom:6px}
 @media(max-width:480px){.card h2{font-size:16px}}
 .card p{font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:12px}
 @media(max-width:480px){.card p{font-size:11px}}
+.card-tag{display:inline-block;vertical-align:middle;margin-left:6px;
+  padding:1px 7px;border-radius:10px;font-size:9px;font-weight:700;
+  background:linear-gradient(135deg,#ff4444,#ff7722);color:#fff;
+  letter-spacing:0.5px;text-transform:uppercase;}
 .badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:600}
 .badge-green{background:#123020;color:#22cc66}
 .badge-blue{background:#102830;color:#00aacc}
 .badge-orange{background:#352215;color:#ff7722}
 .badge-accent{background:var(--accent-glow);color:var(--accent)}
 .badge-critical{background:#351520;color:#ff4444}
-.report{background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px}
+/* Fade-in for reports too */
+.report{
+  background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;
+  opacity:0;animation:fadeUp 0.5s ease forwards;
+}
+#pipeline-report{animation-delay:0.05s}
+#report{animation-delay:0.5s}
 .report h3{font-size:16px;font-weight:600;margin-bottom:16px}
 .report-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
 .stat{text-align:center}
@@ -58,6 +115,7 @@ h1 span{color:var(--accent)}
 
 .footer{text-align:center;margin-top:24px;font-size:11px;color:var(--muted)}
 .footer a{color:var(--accent);text-decoration:none}
+.footer .updated{color:var(--muted);opacity:0.7}
 @media(max-width:640px){
   .grid{grid-template-columns:1fr}
   .report-grid{grid-template-columns:repeat(2,1fr)}
@@ -75,8 +133,10 @@ h1 span{color:var(--accent)}
 </head>
 <body>
 <div class="container">
-  <h1>⚡ <span>Security</span> Tools</h1>
-  <div class="subtitle">Vulnerability management · Remediation intelligence · Endpoint health · AI infrastructure chat</div>
+  <div class="header-area">
+    <h1>⚡ <span>Security</span> Tools</h1><span class="title-tag">2026 Edition v2</span>
+    <div class="subtitle">Vulnerability management · Remediation intelligence · Endpoint health · AI infrastructure chat</div>
+  </div>
 
   <!-- Pipeline View -->
   <div class="report" id="pipeline-report">
@@ -128,7 +188,7 @@ h1 span{color:var(--accent)}
     </a>
     <a class="card" href="https://mrdchiang.github.io/askclippy/" target="_blank">
       <div class="icon">📎</div>
-      <h2>AskClippy</h2>
+      <h2>AskClippy <span class="card-tag">NEW</span></h2>
       <p style="margin-bottom:4px">AI chat for your infrastructure — ask about assets, CVEs, health</p>
       <p style="font-size:11px;color:var(--text-secondary,#8899bb);line-height:1.4;margin-bottom:12px"><strong>What it does:</strong> Drop a Tenable scan CSV/JSON or point it at your knowledge snapshot, then ask questions in plain English. "Which assets have critical KEV CVEs?", "What's our GPO compliance rate?", or "Executive summary of our security posture." Offline-capable with an animated Clippy assistant.</p>
       <span class="badge badge-blue">AI Chat</span>
@@ -150,7 +210,8 @@ h1 span{color:var(--accent)}
   <div class="footer">
     Built by David Chiang · <a href="mailto:mrdavidchiang@gmail.com">mrdavidchiang@gmail.com</a> ·
     <a href="#" onclick="clearPipeline();return false" style="color:var(--muted)">Reset pipeline data</a> ·
-    <span style="color:var(--muted)">2026 Edition</span>
+    <span style="color:var(--muted)">2026 Edition</span> ·
+    <span class="updated">Last updated: July 11, 2026</span>
   </div>
 </div>
 
@@ -214,10 +275,46 @@ function clearPipeline() {
 function updateStats() {
   // Simulated unified stats
   function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
-  document.getElementById('s-findings').textContent = rand(120,180);
-  document.getElementById('s-remediated').textContent = rand(60,78) + '%';
-  document.getElementById('s-compliant').textContent = rand(65,85) + '%';
-  document.getElementById('s-healthy').textContent = rand(70,88) + '%';
+  const targets = {
+    's-findings': rand(120,180),
+    's-remediated': rand(60,78),
+    's-compliant': rand(65,85),
+    's-healthy': rand(70,88)
+  };
+  // Store raw targets for count-up
+  window._statTargets = targets;
+  // Set initial display to 0 for count-up
+  document.getElementById('s-findings').textContent = '0';
+  document.getElementById('s-remediated').textContent = '0%';
+  document.getElementById('s-compliant').textContent = '0%';
+  document.getElementById('s-healthy').textContent = '0%';
+  // Start count-up
+  animateStats();
+}
+function animateStats() {
+  const targets = window._statTargets;
+  if (!targets) return;
+  const els = ['s-findings','s-remediated','s-compliant','s-healthy'];
+  const duration = 1200;
+  const steps = 24;
+  const interval = duration / steps;
+  let step = 0;
+  const timer = setInterval(function() {
+    step++;
+    const progress = Math.min(step / steps, 1);
+    // Ease out quad
+    const eased = 1 - (1 - progress) * (1 - progress);
+    els.forEach(function(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const target = targets[id];
+      const display = id === 's-findings'
+        ? Math.round(eased * target)
+        : Math.round(eased * target) + '%';
+      el.textContent = display;
+    });
+    if (step >= steps) clearInterval(timer);
+  }, interval);
 }
 
 // Listen for localStorage changes from other tabs/windows
