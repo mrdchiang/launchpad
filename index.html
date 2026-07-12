@@ -148,10 +148,10 @@ h1 span{color:var(--accent)}
         <div class="step-count">Finds vulnerabilities</div>
       </a>
       <div class="pipe-arrow">→</div>
-      <a class="pipe-step" href="https://mrdchiang.github.io/remflow/" target="_blank" id="pipe-patchflow">
+      <a class="pipe-step" href="https://mrdchiang.github.io/remflow/" target="_blank" id="pipe-remflow">
         <div class="step-icon">🛠️</div>
         <div class="step-name">RemFlow</div>
-        <div class="step-count" id="pipe-patchflow-count">Deploys fixes</div>
+        <div class="step-count" id="pipe-remflow-count">Deploys fixes</div>
       </a>
       <div class="pipe-arrow">→</div>
       <a class="pipe-step" href="https://mrdchiang.github.io/thevalidator/" target="_blank" id="pipe-validator">
@@ -232,7 +232,7 @@ function updatePipeline() {
 
   // Update pipeline step states
   const svStep = document.getElementById('pipe-shieldview');
-  const pfStep = document.getElementById('pipe-patchflow');
+  const pfStep = document.getElementById('pipe-remflow');
   const tvStep = document.getElementById('pipe-validator');
 
   svStep.classList.toggle('active', pending.length > 0 || deployed.length > 0);
@@ -240,14 +240,14 @@ function updatePipeline() {
   if (pending.length > 0) {
     pfStep.classList.add('active');
     pfStep.classList.remove('done');
-    document.getElementById('pipe-patchflow-count').textContent = `${pending.length} pending`;
+    document.getElementById('pipe-remflow-count').textContent = `${pending.length} pending`;
   } else if (deployed.length > 0) {
     pfStep.classList.add('done');
     pfStep.classList.remove('active');
-    document.getElementById('pipe-patchflow-count').textContent = `${deployed.length} deployed`;
+    document.getElementById('pipe-remflow-count').textContent = `${deployed.length} deployed`;
   } else {
     pfStep.classList.remove('active', 'done');
-    document.getElementById('pipe-patchflow-count').textContent = 'Deploys fixes';
+    document.getElementById('pipe-remflow-count').textContent = 'Deploys fixes';
   }
 
   if (validated.length > 0) {
