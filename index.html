@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://openrouter.ai">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' http://localhost:11434 file:;">
 <title>Security Tools — Launchpad</title>
 <style>
 :root {
@@ -59,7 +59,7 @@ h1 span{color:var(--accent)}
   from{opacity:0;transform:translateY(16px)}
   to{opacity:1;transform:translateY(0)}
 }
-.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
 .card{
   background:var(--elevated);border:1px solid var(--border);border-radius:12px;padding:24px;
   text-align:center;cursor:pointer;transition:all .3s ease;text-decoration:none;display:block;color:var(--text);
@@ -69,7 +69,6 @@ h1 span{color:var(--accent)}
 .card:nth-child(2){animation-delay:0.2s}
 .card:nth-child(3){animation-delay:0.3s}
 .card:nth-child(4){animation-delay:0.4s}
-.card:nth-child(5){animation-delay:0.5s}
 .card:hover{
   border-color:var(--accent);transform:translateY(-3px);
   box-shadow:0 6px 28px var(--accent-glow), 0 0 0 1px rgba(0,102,255,0.1);
@@ -118,9 +117,6 @@ h1 span{color:var(--accent)}
 .footer{text-align:center;margin-top:24px;font-size:11px;color:var(--muted)}
 .footer a{color:var(--accent);text-decoration:none}
 .footer .updated{color:var(--muted);opacity:0.7}
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr 1fr}
-}
 @media(max-width:640px){
   .grid{grid-template-columns:1fr}
   .report-grid{grid-template-columns:repeat(2,1fr)}
@@ -140,7 +136,7 @@ h1 span{color:var(--accent)}
 <div class="container">
   <div class="header-area">
     <h1>⚡ <span>Security</span> Tools</h1><span class="title-tag">2026 Edition v2</span>
-    <div class="subtitle">Vulnerability management · Remediation intelligence · Endpoint health · AI infrastructure chat · Meeting intelligence</div>
+    <div class="subtitle">Vulnerability management · Remediation intelligence · Endpoint health · AI infrastructure chat</div>
   </div>
 
   <!-- Pipeline View -->
@@ -198,13 +194,6 @@ h1 span{color:var(--accent)}
       <p style="font-size:11px;color:var(--text-secondary,#8899bb);line-height:1.4;margin-bottom:12px"><strong>What it does:</strong> Drop a Tenable scan CSV/JSON or point it at your knowledge snapshot, then ask questions in plain English. "Which assets have critical KEV CVEs?", "What's our GPO compliance rate?", or "Executive summary of our security posture." Offline-capable with an animated Clippy assistant.</p>
       <span class="badge badge-blue">AI Chat</span>
     </a>
-    <a class="card" href="https://mrdchiang.github.io/postcredits/" target="_blank">
-      <div class="icon">🎬</div>
-      <h2>PostCredits</h2>
-      <p style="margin-bottom:4px">Paste transcripts — get structured notes, action items, email drafts, and Obsidian wiki pages</p>
-      <p style="font-size:11px;color:var(--text-secondary,#8899bb);line-height:1.4;margin-bottom:12px"><strong>What it does:</strong> The meeting is the movie. PostCredits is what actually matters. Paste a transcript — the LLM generates summary, action items, follow-up email drafts, and an Obsidian-ready note with [[wikilinks]] for your knowledge graph. Supports OpenRouter or local Ollama.</p>
-      <span class="badge badge-accent">Productivity</span>
-    </a>
   </div>
 
   <!-- Unified Posture -->
@@ -222,8 +211,9 @@ h1 span{color:var(--accent)}
   <div class="footer">
     Built by David Chiang · <a href="mailto:mrdavidchiang@gmail.com">mrdavidchiang@gmail.com</a> ·
     <a href="#" onclick="clearPipeline();return false" style="color:var(--muted)">Reset pipeline data</a> ·
+    <a href="https://mrdchiang.github.io/amp-shield/debug.html" target="_blank" style="color:var(--accent)">🔍 Debug Console</a> ·
     <span style="color:var(--muted)">2026 Edition</span> ·
-    <span class="updated">Last updated: July 11, 2026</span>
+    <span class="updated">Last updated: July 18, 2026</span>
   </div>
 </div>
 
